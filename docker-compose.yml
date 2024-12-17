@@ -3,15 +3,9 @@ version: '3.8'
 services:
   backend:
     build: .
-    container_name: fastapi_backend
+    container_name: pet_ms
     ports:
       - "8000:8000"
-    environment:
-      - DATABASE_HOST=mysql_db
-      - DATABASE_PORT=3306
-      - DATABASE_USER=root
-      - DATABASE_PASSWORD=rootpassword
-      - DATABASE_NAME=app_db
     depends_on:
       - mysql_db
     networks:
@@ -22,15 +16,21 @@ services:
     container_name: mysql_db
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: test_pets
-      MYSQL_USER: raza
-      MYSQL_PASSWORD: raza
+      MYSQL_DATABASE: petdev
+      MYSQL_USER: petdev
+      MYSQL_PASSWORD: petdev
     ports:
-      - "3307:3306"
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
       - app_network
+    restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   app_network:
