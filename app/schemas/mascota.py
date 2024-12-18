@@ -8,7 +8,6 @@ class MascotaBase(BaseModel):
     id_raza: int
     sexo: str
     fecha_nacimiento: date
-    id_usuario: int
 
 class MascotaCreate(MascotaBase):
     pass
@@ -18,6 +17,7 @@ class MascotaUpdate(MascotaBase):
 
 class MascotaInDBBase(MascotaBase):
     id_mascota: int
+    id_usuario: int
     fecha_registro: Optional[datetime] = None
 
     class Config:
