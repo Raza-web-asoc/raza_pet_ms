@@ -1,31 +1,31 @@
 version: '3.8'
 
 services:
-  backend:
+  raza-pets-ms:
     build: .
-    container_name: pet_ms
+    container_name: raza-pets-ms
     ports:
-      - "8000:8000"
+      - "8001:8000"
     depends_on:
-      mysql_db:
+      raza-pets-db:
         condition: service_healthy
     networks:
-      - app_network
+      - autenticador_network
 
-  mysql_db:
+  raza-pets-db:
     image: mysql:9.0
-    container_name: mysql_db
+    container_name: raza-pets-db
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: petdev
       MYSQL_USER: petdev
       MYSQL_PASSWORD: petdev
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      - app_network
+      - autenticador_network
     restart: always
     healthcheck:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
@@ -34,8 +34,8 @@ services:
       retries: 5
 
 networks:
-  app_network:
-    driver: bridge
+  autenticador_network:
+    external: true
 
 volumes:
   mysql_data:

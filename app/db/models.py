@@ -2,9 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, Enum, Date, DateTime, Fore
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
-
-Base = declarative_base()
-
+from app.db.base_class import Base
 class Especie(Base):
     __tablename__ = 'especie'
     id_especie = Column(Integer, primary_key=True, autoincrement=True)
