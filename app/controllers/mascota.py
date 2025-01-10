@@ -63,3 +63,8 @@ def read_mascotas_by_especie(especie_id: int, skip: int = 0, limit: int = 10, db
 def read_mascotas_by_raza(raza_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     mascotas = db.query(Mascota).filter(Mascota.id_raza == raza_id).offset(skip).limit(limit).all()
     return mascotas
+
+@router.get("/usuario/{usuario_id}", response_model=List[MascotaSchema])
+def read_mascotas_by_usuario(usuario_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+    mascotas = db.query(Mascota).filter(Mascota.id_usuario == usuario_id).offset(skip).limit(limit).all()
+    return mascotas
