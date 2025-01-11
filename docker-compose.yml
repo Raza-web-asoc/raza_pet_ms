@@ -9,6 +9,8 @@ services:
     depends_on:
       raza-pets-db:
         condition: service_healthy
+    volumes:
+      - ./app:/usr/src/app
     networks:
       - autenticador_network
 

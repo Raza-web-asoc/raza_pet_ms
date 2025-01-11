@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, Header
 from sqlalchemy.orm import Session
 from typing import List
 
-from app.db.models import Mascota
+from app.db.models import Mascota, Especie, Raza
 from app.schemas.mascota import MascotaCreate, MascotaUpdate, Mascota as MascotaSchema
 from app.db.session import get_db
 
@@ -12,10 +12,10 @@ router = APIRouter()
 def create_mascota(mascota: MascotaCreate, x_auth_user_id: str = Header(None), db: Session = Depends(get_db)):
     if x_auth_user_id is None:
         raise HTTPException(status_code=400, detail="x_auth_user_id header is required")
-    
+
     mascota_data = mascota.dict()
     mascota_data['id_usuario'] = int(x_auth_user_id)
-    
+
     db_mascota = Mascota(**mascota_data)
     db.add(db_mascota)
     db.commit()
@@ -24,8 +24,31 @@ def create_mascota(mascota: MascotaCreate, x_auth_user_id: str = Header(None), d
 
 @router.get("/", response_model=List[MascotaSchema])
 def read_mascotas(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    mascotas = db.query(Mascota).offset(skip).limit(limit).all()
-    return mascotas
+
+    mascotas = (
+        db.query(
+            Mascota,
+            Especie.nombre_especie,
+            Raza.nombre_raza
+        )
+        .join(Especie, Mascota.id_especie == Especie.id_especie)
+        .join(Raza, Mascota.id_raza == Raza.id_raza)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    result = [
+        {
+            **mascota.__dict__,
+            'nombre_especie': nombre_especie,
+            'nombre_raza': nombre_raza
+        }
+        for mascota, nombre_especie, nombre_raza in mascotas
+    ]
+
+    return result
+
 
 @router.get("/{mascota_id}", response_model=MascotaSchema)
 def read_mascota(mascota_id: int, db: Session = Depends(get_db)):
@@ -66,5 +89,27 @@ def read_mascotas_by_raza(raza_id: int, skip: int = 0, limit: int = 10, db: Sess
 
 @router.get("/usuario/{usuario_id}", response_model=List[MascotaSchema])
 def read_mascotas_by_usuario(usuario_id: int, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
-    mascotas = db.query(Mascota).filter(Mascota.id_usuario == usuario_id).offset(skip).limit(limit).all()
-    return mascotas
+    mascotas = (
+        db.query(
+            Mascota,
+            Especie.nombre_especie,
+            Raza.nombre_raza
+        )
+        .join(Especie, Mascota.id_especie == Especie.id_especie)
+        .join(Raza, Mascota.id_raza == Raza.id_raza)
+        .filter(Mascota.id_usuario == usuario_id)
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+
+    result = [
+        {
+            **mascota.__dict__,
+            'nombre_especie': nombre_especie,
+            'nombre_raza': nombre_raza
+        }
+        for mascota, nombre_especie, nombre_raza in mascotas
+    ]
+
+    return result

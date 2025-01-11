@@ -8,6 +8,8 @@ class MascotaBase(BaseModel):
     id_raza: int
     sexo: str
     fecha_nacimiento: date
+    nombre_raza: Optional[str] = None
+    nombre_especie: Optional[str] = None
 
 class MascotaCreate(MascotaBase):
     pass
