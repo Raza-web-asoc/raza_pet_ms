@@ -30,7 +30,7 @@ services:
       - autenticador_network
     restart: always
     healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      test: [ "CMD", "mysqladmin", "ping", "-h", "raza-pets-db" ]
       interval: 5s
       timeout: 5s
       retries: 5
