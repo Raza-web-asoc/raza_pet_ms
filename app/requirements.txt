@@ -4,3 +4,4 @@ pymysql
 python-dotenv
 sqlalchemy
 cryptography
+prometheus-fastapi-instrumentator==7.0.0
