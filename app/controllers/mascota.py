@@ -130,18 +130,10 @@ def read_mascotas_by_usuario(usuario_id: int, db: Session = Depends(get_db)):
             Raza.id_especie
         )
         .join(Raza, Mascota.id_raza == Raza.id_raza)
+        .join(Especie, Raza.id_especie == Especie.id_especie)
         .filter(Mascota.id_usuario == usuario_id)
         .all()
     )
 
-    result = [
-        {
-            **mascota.__dict__,
-            'id_especie': id_especie,
-            'nombre_especie': nombre_especie,
-            'nombre_raza': nombre_raza
-        }
-        for mascota, nombre_especie, nombre_raza, id_especie in mascotas
-    ]
 
-    return result
+    return mascotas
