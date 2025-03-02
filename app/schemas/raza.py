@@ -4,7 +4,6 @@ from typing import Optional
 class RazaBase(BaseModel):
     nombre_raza: str
     id_especie: int
-    historia: Optional[str] = None
 
 class RazaCreate(RazaBase):
     pass

@@ -21,6 +21,11 @@ def read_razas(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     razas = db.query(Raza).offset(skip).limit(limit).all()
     return razas
 
+@router.get("/{especie_id}", response_model=List[RazaSchema])
+def read_razas_by_especie(especie_id: int, db: Session = Depends(get_db)):
+    razas = db.query(Raza).filter(Raza.id_especie == especie_id).all()
+    return razas
+
 @router.get("/{raza_id}", response_model=RazaSchema)
 def read_raza(raza_id: int, db: Session = Depends(get_db)):
     raza = db.query(Raza).filter(Raza.id_raza == raza_id).first()
