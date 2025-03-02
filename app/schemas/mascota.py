@@ -4,10 +4,10 @@ from typing import Optional
 
 class MascotaBase(BaseModel):
     nombre_mascota: str
-    id_especie: int
     id_raza: int
     sexo: str
     fecha_nacimiento: date
+
 
 class MascotaCreate(MascotaBase):
     pass
@@ -24,7 +24,9 @@ class MascotaInDBBase(MascotaBase):
         orm_mode = True
 
 class Mascota(MascotaInDBBase):
-    pass
+    id_especie: int
+    nombre_raza: str
+    nombre_especie: str
 
 class MascotaInDB(MascotaInDBBase):
     pass
