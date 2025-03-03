@@ -122,18 +122,21 @@ def read_mascotas_by_raza(raza_id: int, skip: int = 0, limit: int = 10, db: Sess
 
 @router.get("/usuario/{usuario_id}", response_model=List[MascotaSchema])
 def read_mascotas_by_usuario(usuario_id: int, db: Session = Depends(get_db)):
-    mascotas = (
-        db.query(
-            Mascota,
-            Especie.nombre_especie,
-            Raza.nombre_raza,
-            Raza.id_especie
+    mascotas = [
+        MascotaSchema(
+            id_mascota=m.id_mascota,
+            nombre_mascota=m.nombre_mascota,
+            id_raza=m.id_raza,
+            sexo=m.sexo,
+            fecha_nacimiento=m.fecha_nacimiento,
+            id_usuario=m.id_usuario,
+            fecha_registro=m.fecha_registro,
+            id_especie=id_especie,
+            nombre_raza=nombre_raza,
+            nombre_especie=nombre_especie
         )
-        .join(Raza, Mascota.id_raza == Raza.id_raza)
-        .join(Especie, Raza.id_especie == Especie.id_especie)
-        .filter(Mascota.id_usuario == usuario_id)
-        .all()
-    )
+        for m, nombre_especie, nombre_raza, id_especie in mascotas_db
+    ]
 
 
     return mascotas
