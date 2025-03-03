@@ -82,13 +82,30 @@ def read_mascotas_by_especie_not_user(especie_id: int, usuario_id: int, db: Sess
 
 
 
-
 @router.get("/{mascota_id}", response_model=MascotaSchema)
 def read_mascota(mascota_id: int, db: Session = Depends(get_db)):
-    mascota = db.query(Mascota).filter(Mascota.id_mascota == mascota_id).first()
+    mascota = (
+        db.query(
+            Mascota,
+            Especie.nombre_especie,
+            Raza.nombre_raza,
+            Raza.id_especie
+        )
+        .join(Raza, Mascota.id_raza == Raza.id_raza)  # Unimos Mascota con Raza
+        .join(Especie, Raza.id_especie == Especie.id_especie)  # Unimos Raza con Especie
+        .filter(Mascota.id_mascota == mascota_id)
+        .first()
+    )
     if mascota is None:
         raise HTTPException(status_code=404, detail="Mascota not found")
-    return mascota
+
+    result = {
+        **mascota[0].__dict__,
+        'id_especie': mascota[3],
+        'nombre_especie': mascota[1],
+        'nombre_raza': mascota[2]
+    }
+    return result
 
 @router.put("/{mascota_id}", response_model=MascotaSchema)
 def update_mascota(mascota_id: int, mascota: MascotaUpdate, db: Session = Depends(get_db)):
