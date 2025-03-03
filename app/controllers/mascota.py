@@ -135,5 +135,21 @@ def read_mascotas_by_usuario(usuario_id: int, db: Session = Depends(get_db)):
         .all()
     )
 
+    mascotas = [
+        MascotaSchema(
+            id_mascota=m.id_mascota,
+            nombre_mascota=m.nombre_mascota,
+            id_raza=m.id_raza,
+            sexo=m.sexo,
+            fecha_nacimiento=m.fecha_nacimiento,
+            id_usuario=m.id_usuario,
+            fecha_registro=m.fecha_registro,
+            id_especie=id_especie,
+            nombre_raza=nombre_raza,
+            nombre_especie=nombre_especie
+        )
+        for m, nombre_especie, nombre_raza, id_especie in mascotas_db
+    ]
+
 
     return mascotas
