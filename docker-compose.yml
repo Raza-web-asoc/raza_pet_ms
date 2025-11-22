@@ -16,6 +16,16 @@ services:
     networks:
       - autenticador_network
 
+  raza-pets-ms-tests:
+    build: .
+    container_name: raza-pets-ms-tests
+    command: ["pytest", "-q"]
+    depends_on:
+      raza-pets-db:
+        condition: service_healthy
+    networks:
+      - autenticador_network
+
   raza-pets-db:
     image: mysql:9.0
     container_name: raza-pets-db
