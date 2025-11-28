@@ -5,6 +5,7 @@ from typing import List
 from app.db.models import Mascota, Especie, Raza
 from app.schemas.mascota import MascotaCreate, MascotaUpdate,MascotaInDBBase,  Mascota as MascotaSchema
 from app.db.session import get_db
+from app.schemas.mascota import DeleteResponse
 
 router = APIRouter()
 
@@ -168,5 +169,10 @@ def read_mascotas_by_usuario(usuario_id: int, db: Session = Depends(get_db)):
         for m, nombre_especie, nombre_raza, id_especie in mascotas_db
     ]
 
-
     return mascotas
+
+@router.delete("/usuario/{usuario_id}", response_model=DeleteResponse)
+def delete_mascotas_by_usuario(usuario_id: int, db: Session = Depends(get_db)):
+    deleted_count = db.query(Mascota).filter(Mascota.id_usuario == usuario_id).delete()
+    db.commit()
+    return DeleteResponse(success=True, deleted_count=deleted_count)

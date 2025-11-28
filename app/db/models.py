@@ -30,3 +30,5 @@ class Mascota(Base):
     fecha_registro = Column(DateTime, default=datetime.utcnow, comment='Fecha de registro de la mascota')
 
     raza = relationship('Raza')
+
+

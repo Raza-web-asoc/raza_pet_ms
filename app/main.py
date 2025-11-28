@@ -9,6 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.controllers import mascota, especie, raza
 from app.db.base import init_db
+from app.seed.seed import run_seed
 
 app = FastAPI()
 
@@ -32,3 +33,7 @@ app.include_router(raza.router, prefix="/razas", tags=["razas"])
 @app.get("/")
 def read_root():
     return {"message": "Welcome to the Pets API"}
+
+@app.on_event("startup")
+def startup_event():
+    run_seed()

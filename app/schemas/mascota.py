@@ -30,3 +30,7 @@ class Mascota(MascotaInDBBase):
 
 class MascotaInDB(MascotaInDBBase):
     pass
+
+class DeleteResponse(BaseModel):
+    success: bool
+    deleted_count: int
